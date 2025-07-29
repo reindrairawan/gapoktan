@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ judul }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100" style="font-family: Arial, Helvetica, sans-serif;" x-data="{ isSidebarOpen: window.innerWidth >= 768 }" @resize.window="isSidebarOpen = window.innerWidth >= 768">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 h-screen overflow-y-auto bg-gradient-to-br from-gray-900 to-gray-700 text-white fixed inset-y-0 left-0 transform transition-transform duration-200 ease-in-out z-30 md:relative md:translate-x-0 shadow-lg"
+        :class="{ '-translate-x-full': !isSidebarOpen }">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold mb-6 flex items-center space-x-2">
+                    <img src="{% static 'gambar/logobpp.png' %}" alt="Logo" class="w-18 h-16">
+                    <span>ADMIN BPP</span>
+                </h1>
+                
+                {% include "navbaradmin.html" %}
+             
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-6">
+            {% block content %}
+            
+            {% endblock content %}
+        </main>
+        
+       
+       {% include "script.html" %}
+
+
+    </div>
+</body>
+</html>

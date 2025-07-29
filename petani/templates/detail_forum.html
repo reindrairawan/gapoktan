@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Forum Post -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+            <div class="p-6 md:p-8 flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg">
+                        {{ forum.user.username|first|upper }}
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">{{ forum.judul }}</h2>
+                        <div class="text-sm text-gray-500 mt-1">
+                            <span class="font-medium text-emerald-600">{{ forum.user.username }}</span>
+                            <span class="mx-2">•</span>
+                            <span>{{ forum.tanggal|date:"d M Y H:i" }}</span>
+                        </div>
+                    </div>
+                </div>
+               <div>
+                    <form method="post" action="{% url 'hapus_forum' forum.id %}" onsubmit="return confirm('Yakin ingin menghapus diskusi ini?');">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="text-red-600 hover:text-red-800 font-semibold px-3 py-1 rounded-lg transition" 
+                                title="Hapus Diskusi">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="prose max-w-none text-gray-700 px-6 pb-6">
+                {{ forum.isi|linebreaks }}
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-8">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 text-white flex justify-between items-center">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fas fa-comments"></i> Komentar ({{ komentar_list.count }})
+                </h3>
+            </div>
+            
+            <div class="divide-y divide-gray-100">
+                {% for komentar in komentar_list %}
+                <div class="p-6 flex justify-between items-start gap-4">
+                    <div class="flex gap-4 flex-1">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center font-bold">
+                                {{ komentar.user.username|first|upper }}
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2">
+                                <span class="font-medium text-gray-800">{{ komentar.user.username }}</span>
+                                <span class="text-xs text-gray-400">{{ komentar.tanggal|date:"d M Y H:i" }}</span>
+                            </div>
+                            <p class="text-gray-700 mt-2">{{ komentar.isi }}</p>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <form method="post" action="{% url 'hapus_komentar' komentar.id %}" onsubmit="return confirm('Yakin ingin menghapus komentar ini?');">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="text-red-600 hover:text-red-800 font-semibold px-3 py-1 rounded-lg transition">
+                                Hapus
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="p-6 text-center text-gray-500">
+                    Belum ada komentar. Jadilah yang pertama berkomentar!
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Add Comment Form -->
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 text-white">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fas fa-edit"></i> Tambah Komentar
+                </h3>
+            </div>
+            
+            <form method="post" class="p-6">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    {{ form_komentar.isi }}
+                </div>
+                <button type="submit" 
+                        class="mt-4 w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                    Kirim Komentar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    textarea {
+        @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all;
+        min-height: 120px;
+        @apply resize-y;
+    }
+    .prose {
+        @apply text-gray-700;
+    }
+    .prose p {
+        @apply mb-4;
+    }
+</style>
+
+{% endblock %}

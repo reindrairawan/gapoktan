@@ -1,0 +1,155 @@
+{% extends "baseadmin.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper -->
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-red-200 to-yellow-300 p-6">
+    
+<div class="overflow-x-auto flex-1 p-6 transition-all duration-200 ease-in-out">
+    <!-- Header Mobile -->
+    <div class="md:hidden flex justify-between items-center bg-gray-800 text-white p-4 rounded-md shadow-md mb-6">
+        <h1 class="text-2xl font-bold mb-6 flex items-center space-x-2">
+            <img src="{% static 'gambar/logo.png' %}" alt="Logo" class="w-8 h-8">
+            <span>{{ judul }}</span>
+        </h1>
+        <button @click="isSidebarOpen = !isSidebarOpen" class="focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Welcome Section -->
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-green-900 leading-tight drop-shadow-xl">Selamat Datang, Admin!</h1>
+        <p class="text-gray-600 mt-2 text-lg">
+            Selamat Datang Di Pengelolaan Data Gapoktan Industri Pertanian Kecamatan Mlandingan.
+        </p>
+    </header>
+
+    <!-- Header Utama -->
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-700">{{ judul }}</h1>
+    </header>
+
+    <!-- Tombol Tambah Profil -->
+    <a href="{% url 'formprofiladmin' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <i class="fas fa-plus"></i> Tambah Profil
+    </a>
+
+    <!-- Tabel Profil -->
+    <div class="overflow-x-auto bg-white shadow rounded-lg p-6 mt-4">
+        <table class="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="px-4 py-2 border border-gray-300">No</th>
+                    <th class="px-4 py-2 border border-gray-300">Nama Instansi</th>
+                    <th class="px-4 py-2 border border-gray-300">Gambar Kantor</th>
+                    <th class="px-4 py-2 border border-gray-300">Deskripsi</th>
+                    <th class="px-4 py-2 border border-gray-300">Gambar Ketua</th>
+                    <th class="px-4 py-2 border border-gray-300">Deskripsi</th>
+                    <th class="px-4 py-2 border border-gray-300 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profil in profil_list %}
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border border-gray-300 text-center">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ profil.nama_instansi }}</td>
+                    <td class="px-4 py-2 border border-gray-300">
+                        {% if profil.gambar_kantor %}
+                            <img src="{{ profil.gambar_kantor.url }}" alt="Gambar Kantor" class="h-16 w-auto">
+                        {% else %}
+                            Tidak ada
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 border border-gray-300">{{ profil.deskripsi_kantor|safe|truncatechars:100 }}</td>
+                    <td class="px-4 py-2 border border-gray-300">
+                        {% if profil.gambar_ketua %}
+                            <img src="{{ profil.gambar_ketua.url }}" alt="Gambar Ketua" class="h-16 w-auto">
+                        {% else %}
+                            Tidak ada
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 border border-gray-300">{{ profil.deskripsi_ketua|safe|truncatechars:100 }}</td>
+                    <td class="px-4 py-2 border border-gray-300 text-center">
+                        <a href="{% url 'editprofiladmin' profil.id %}" class="text-blue-500 hover:text-blue-700">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{% url 'deleteprofiladmin' profil.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-500 hover:text-red-700"
+                                    onclick="return confirm('Apakah Anda yakin ingin menghapus profil ini?');">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="px-4 py-2 border border-gray-300 text-center">Data profil tidak tersedia.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tombol Tambah Kegiatan -->
+    <div class="mt-10 mb-2">
+        <h2 class="text-2xl font-bold text-gray-700">Data Kegiatan</h2>
+        <a href="{% url 'formkegiatanadmin' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2 inline-block">
+            <i class="fas fa-plus"></i> Tambah Kegiatan
+        </a>
+    </div>
+
+    <!-- Tabel Kegiatan -->
+    <div class="overflow-x-auto bg-white shadow rounded-lg p-6 mt-4">
+        <table class="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="px-4 py-2 border border-gray-300">No</th>
+                    <th class="px-4 py-2 border border-gray-300">Judul</th>
+                    <th class="px-4 py-2 border border-gray-300">Gambar</th>
+                    <th class="px-4 py-2 border border-gray-300">Deskripsi</th>
+                    <th class="px-4 py-2 border border-gray-300">Tanggal</th>
+                    <th class="px-4 py-2 border border-gray-300 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for kegiatan in kegiatan_list %}
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border border-gray-300 text-center">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ kegiatan.judul }}</td>
+                    <td class="px-4 py-2 border border-gray-300">
+                        {% if kegiatan.gambar %}
+                            <img src="{{ kegiatan.gambar.url }}" alt="Gambar Kegiatan" class="h-16 w-auto">
+                        {% else %}
+                            Tidak ada
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 border border-gray-300">{{ kegiatan.deskripsi|safe|truncatechars:100 }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ kegiatan.tanggal }}</td>
+                    <td class="px-4 py-2 border border-gray-300 text-center">
+                        <a href="{% url 'editkegiatanadmin' kegiatan.id %}" class="text-blue-500 hover:text-blue-700 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{% url 'deletekegiatanadmin' kegiatan.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('Yakin ingin hapus kegiatan ini?')" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-4 py-2 border border-gray-300 text-center text-gray-500 italic">
+                        Belum ada data kegiatan.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper -->
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-blue-200 to-green-300 p-6">
+
+    <!-- Welcome Section -->
+    <header class="text-center mb-12">
+        <div class="flex justify-center mb-4">
+            <img src="{% static 'gambar/logobpp.png' %}" alt="Logo" class="w-16 h-18">
+        </div>
+        <h1 class="text-4xl font-extrabold text-green-800 leading-tight">Selamat Datang, Petani!</h1>
+        <p class="text-gray-600 mt-3 text-lg">
+            Selamat Datang Di Website Monitoring Gapoktan Industri Pertanian Kecamatan Mlandingan.
+        </p>
+    </header>
+
+    <!-- Statistik Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <!-- Anggota -->
+        <div class="rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Total Anggota</h3>
+            <canvas id="Anggota"></canvas>
+        </div>
+
+        <!-- Lahan -->
+        <div class="rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Lahan Pertanian</h3>
+            <canvas id="Lahan"></canvas>
+        </div>
+
+        <!-- Kebutuhan Pupuk ERDKK -->
+        <div class="rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Kebutuhan Pupuk</h3>
+            <canvas id="erdkkChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Data Terbaru -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Anggota Terbaru - Card Style -->
+        <div class=" rounded-xl shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-gray-100">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v1h8v-1zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-1a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v1h-3zM4.75 12.094A5.973 5.973 0 004 15v1H1v-1a3 3 0 013.75-2.906z" />
+                    </svg>
+                    Anggota Terbaru
+                </h2>
+            </div>
+            <div class="divide-y divide-gray-100">
+                {% for petani in anggota_terbaru %}
+                <div class="p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                                {{ petani.nama|first|upper }}
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-gray-800 truncate">{{ petani.nama }}</p>
+                            <p class="text-sm text-gray-500 truncate">{{ petani.no_hp }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-400">{{ petani.created_at|date:"d M Y" }}</p>
+                            <p class="text-xs text-blue-500 mt-1">{{ petani.grup }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="p-4 text-center text-gray-400">
+                    Tidak ada data anggota.
+                </div>
+                {% endfor %}
+            </div>
+            <div class="p-4 border-t border-gray-100 text-center">
+                <a href="{% url 'anggota' %}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    Lihat Semua Anggota →
+                </a>
+            </div>
+        </div>
+
+        <!-- Lahan Terbaru - Card Style -->
+        <div class="bg-white-400 rounded-xl shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-gray-100">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd" />
+                    </svg>
+                    Lahan Terbaru
+                </h2>
+            </div>
+            <div class="divide-y divide-gray-100">
+                {% for lahan in lahan_terbaru %}
+                <div class="p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">{{ lahan.pemilik }}</h3>
+                            <p class="text-sm text-gray-500 mt-1">{{ lahan.jenis_tanaman }}</p>
+                            <p class="text-xs text-gray-400 mt-1">📍 {{ lahan.lokasi|safe }}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">{{ lahan.luas }} ha</span>
+                            <p class="text-xs text-gray-400 mt-1">{{ lahan.created_at|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+
+                </div>
+                {% empty %}
+                <div class="p-4 text-center text-gray-400">
+                    Tidak ada data lahan.
+                </div>
+                {% endfor %}
+            </div>
+             <div class="p-4 border-t border-gray-100 text-center">
+                <a href="{% url 'lahan' %}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    Lihat Semua Lahan →
+                </a>
+            </div>
+        </div>
+
+        <!-- Alsintan Terbaru - Card Style -->
+        <div class="bg-white-400 rounded-xl shadow-sm overflow-hidden">
+            <div class="p-5 border-b border-gray-100">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Alsintan Terbaru
+                </h2>
+            </div>
+            <div class="divide-y divide-gray-100">
+                {% for alat in alsintan_terbaru %}
+                <div class="p-4 hover:bg-gray-50 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">{{ alat.nama_alat }}</h3>
+                            <p class="text-sm text-gray-500 mt-1">{{ alat.jenis_alat }}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="flex items-center space-x-2">
+                                <span class="inline-block bg-purple-100 text-purple-800 text-xs text-center px-2 py-1 rounded-full">{{ alat.jumlah }} unit</span>
+                                <span class="inline-block text-xs px-2 py-1 rounded-full 
+                                    {% if alat.kondisi == 'Baik' %}bg-green-100 text-green-800
+                                    {% elif alat.kondisi == 'Rusak' %}bg-red-100 text-red-800
+                                    {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                    {{ alat.kondisi }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">{{ alat.tanggal_pengadaan|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="p-4 text-center text-gray-400">
+                    Tidak ada data alsintan.
+                </div>
+                {% endfor %}
+            </div>
+             <div class="p-4 border-t border-gray-100 text-center">
+                <a href="{% url 'alsintan' %}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    Lihat Semua Alsintan →
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script>
+    // Chart Total Anggota
+    const ctx1 = document.getElementById('Anggota').getContext('2d');
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+            datasets: [{
+                label: 'Total Anggota',
+                data: {{ petani_per_bulan|safe }},
+                borderColor: '#16a34a',
+                backgroundColor: 'rgba(19, 111, 10, 0.2)',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(203, 88, 21, 0.5)' }
+                }
+            }
+        }
+    });
+
+    // Chart Lahan
+    const ctx2 = document.getElementById('Lahan').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+            datasets: [{
+                label: 'Total Lahan',
+                data: {{ lahan_per_bulan|safe }},
+                backgroundColor: '#f97316',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(209, 213, 219, 0.5)' }
+                }
+            }
+        }
+    });
+    
+    // Chart Kebutuhan Pupuk
+    const ctx3 = document.getElementById('erdkkChart').getContext('2d');
+    new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: ['Urea', 'NPK', 'Organik'],
+            datasets: [{
+                label: 'Kebutuhan Pupuk (kg/liter)',
+                data: [{{ urea }}, {{ npk }}, {{ organik }}],
+                backgroundColor: ['#60a5fa', '#34d399', '#fbbf24'],
+                borderColor: ['#3b82f6', '#10b981', '#f59e0b'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock content %}

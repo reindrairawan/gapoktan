@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Fullscreen Background -->
+<div class="relative w-full min-h-screen bg-gradient-to-br from-green-50 via-blue-100 to-green-200 overflow-hidden">
+
+    <!-- Ornamen background -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-green-300 opacity-30 rounded-full filter blur-3xl z-0"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-300 opacity-30 rounded-full filter blur-3xl z-0"></div>
+
+    <!-- Kontainer konten -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Judul Halaman -->
+        <header class="text-center mb-10">
+            <div class="flex justify-center mb-4">
+                <img src="{% static 'gambar/logobpp.png' %}" alt="Logo" class="w-18 h-16">
+            </div>
+            <h1 class="text-4xl font-extrabold text-green-900 drop-shadow">
+                Anggota Gapoktan Kecamatan Mlandingan
+            </h1>
+        </header>
+
+        <!-- Form Pencarian -->
+        <form method="get" action="" class="flex justify-center mb-6">
+            <input type="text" name="q" placeholder="Cari nama atau kelompok tani..."
+                value="{{ request.GET.q }}"
+                class="p-3 border border-green-400 rounded-l-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white/30 backdrop-blur-md text-green-900 placeholder-green-800">
+            <button type="submit" class="bg-green-600 text-white px-5 rounded-r-md hover:bg-green-700 transition shadow">
+                Cari
+            </button>
+            {% if request.GET.q %}
+            <a href="{% url 'anggota' %}" class="ml-2 bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 transition shadow">
+                Reset
+            </a>
+            {% endif %}
+        </form>
+
+        <!-- Tabel Anggota -->
+        <div class="backdrop-blur-md bg-white/60 rounded-xl shadow-xl p-6 border border-white/20 overflow-x-auto">
+            <h2 class="text-2xl font-bold mb-6 text-center text-green-800 drop-shadow">Daftar Anggota Kelompok</h2>
+            <table class="w-full min-w-max text-left border-separate border-spacing-y-2">
+                <thead>
+                    <tr class="bg-green-200/60 text-green-900">
+                        <th class="p-3">Kelompok Tani</th>
+                        <th class="p-3">Nama</th>
+                        <th class="p-3">Nik</th>
+                        <th class="p-3">Alamat</th>
+                    </tr>
+                </thead>
+                {% for row in petani.object_list %}
+                <tbody>
+                    <tr class="hover:bg-green-100/50 transition backdrop-blur-md bg-white/30">
+                        <td class="p-3 text-green-900 font-semibold">{{ row.grup }}</td>
+                        <td class="p-3">{{ row.nama }}</td>
+                        <td class="p-3">{{ row.nik_tersembunyi }}</td>
+                        <td class="p-3">{{ row.alamat|safe }}</td>
+                    </tr>
+                </tbody>
+                {% empty %}
+                <tbody>
+                    <tr>
+                        <td colspan="5" class="text-center text-red-500 italic p-3">Data tidak ditemukan.</td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+
+            <!-- Navigasi Halaman -->
+            <div class="mt-6 flex justify-center items-center space-x-2">
+                {% if petani.has_previous %}
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ petani.previous_page_number }}"
+                       class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition shadow">
+                        &laquo; Sebelumnya
+                    </a>
+                {% endif %}
+
+                {% for num in petani.paginator.page_range %}
+                    {% if petani.number == num %}
+                        <span class="px-4 py-2 bg-green-700 text-white font-semibold rounded-md shadow">
+                            {{ num }}
+                        </span>
+                    {% elif num > petani.number|add:'-3' and num < petani.number|add:'3' %}
+                        <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ num }}"
+                           class="px-4 py-2 bg-green-200 text-green-800 rounded-md hover:bg-green-300 transition shadow">
+                            {{ num }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if petani.has_next %}
+                    <a href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ petani.next_page_number }}"
+                       class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition shadow">
+                        Selanjutnya &raquo;
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

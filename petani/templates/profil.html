@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-blue-200 to-green-300 p-6">
+    
+
+    <header class="mb-8 text-center">
+      <div class="flex justify-center mb-4">
+            <img src="{% static 'gambar/logobpp.png' %}" alt="Logo" class="w-18 h-16">
+        </div>
+        <h1 class="text-4xl font-extrabold text-green-900 drop-shadow">Profil Kantor BPP Kecamatan Mlandingan.</h1>
+        <p class="text-gray-700 text-lg"></p>
+    </header>
+
+  <!-- Profil Kantor: Slider Besar -->
+  <section class="w-full max-w-5xl mx-auto mb-10 rounded-lg overflow-hidden backdrop-blur-sm">
+    <!-- Gambar kantor -->
+    <img src="{{ profil.gambar_kantor.url }}" alt="Foto Kantor" 
+         class="w-full h-[400px] object-cover" />
+  
+    <!-- Deskripsi kantor -->
+    <div class="p-6">
+      <h2 class="text-2xl font-bold text-green-900 mb-2">Kantor BPP Kecamatan Mlandingan.</h2>
+      <p class="text-sm text-gray-800 leading-relaxed">
+        {{ profil.deskripsi_kantor|safe|truncatechars:300 }}
+        <a href="{% url 'profil_kantor' %}" class="text-green-600 font-medium hover:underline">Baca selengkapnya</a>
+      </p>
+    </div>
+  </section>
+  
+  
+
+  <!-- Profil Ketua: Thumbnail kecil di bawah slider -->
+  <section class="max-w-5xl mx-auto flex items-center space-x-6 mb-14">
+    <img src="{{ profil.gambar_ketua.url }}" alt="Foto Ketua"
+         class="w-32 h-32 object-cover rounded-full border-4 border-green-600 shadow-md" />
+    <div>
+      <h3 class="text-xl font-semibold text-green-900">Kepala Koordinator BPP Mlandingan</h3>
+      <p class="text-green-800 mt-1 line-clamp-3">{{ profil.deskripsi_ketua|safe|truncatechars:200 }}</p>
+      <a href="{% url 'profil_ketua' %}" 
+        class="mt-2 inline-block text-green-600 border border-green-600 px-4 py-2 rounded hover:bg-green-600 hover:text-white transition duration-200 font-medium">
+        Lihat view lebih lanjut
+      </a>
+    </div>
+  </section>
+
+ <!-- Kegiatan Terbaru -->
+<section class="max-w-5xl mx-auto">
+  <h2 class="text-2xl font-bold text-green-900 mb-6">Kegiatan Terbaru</h2>
+  {% if latest_kegiatan %}
+    <article class="flex space-x-6 py-6 items-start">
+      {% if latest_kegiatan.gambar %}
+        <img src="{{ latest_kegiatan.gambar.url }}" alt="{{ latest_kegiatan.judul }}"
+             class="w-28 h-20 object-cover rounded-md flex-shrink-0" />
+      {% endif %}
+      <div class="flex-1">
+        <h3 class="text-lg font-semibold text-green-700 hover:text-green-900 cursor-pointer">{{ latest_kegiatan.judul }}</h3>
+        <time class="block text-xs text-gray-500 mb-1">{{ latest_kegiatan.tanggal|date:"d M Y" }}</time>
+        <p class="text-sm text-gray-700 line-clamp-3">{{ latest_kegiatan.deskripsi }}</p>
+      </div>
+    </article>
+  {% else %}
+    <p class="text-gray-600 italic py-10 text-center">Belum ada kegiatan tercatat.</p>
+  {% endif %}
+<a href="{% url 'kegiatan_list' %}" 
+   class="mt-8 inline-block text-green-600 border border-green-600 px-4 py-2 rounded hover:bg-green-600 hover:text-white transition duration-200 font-medium">
+   Lihat semua kegiatan
+</a>
+
+</section>
+
+
+</div>
+
+{% endblock content %}

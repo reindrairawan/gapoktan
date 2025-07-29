@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-blue-200 to-green-300 p-6">
+<div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 ">
+    <!-- Judul -->
+    <h2 class="text-4xl font-extrabold text-green-800 mb-6 text-center drop-shadow">Profil Ketua GAPOKTAN</h2>
+
+    <!-- Gambar Ketua -->
+    <div class="overflow-hidden rounded-2xl shadow-lg mb-6 transition-transform duration-300 hover:scale-[1.01]">
+        <img src="{{ profil.gambar_ketua.url }}" 
+             alt="Foto Ketua" 
+             class="w-full h-auto object-cover rounded-2xl">
+    </div>    
+
+    <!-- Deskripsi Ketua -->
+    <div class="/90 p-6 rounded-2xl text-gray-800 leading-relaxed text-[15px] sm:text-sm tracking-wide backdrop-blur-sm">
+        <div class="prose max-w-none prose-green text-justify">
+            {{ profil.deskripsi_ketua|safe }}
+        </div>
+    </div>
+</div>
+{% endblock content %}

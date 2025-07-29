@@ -1,0 +1,233 @@
+{% extends "baseadmin.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper -->
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-red-200 to-yellow-300 p-6">
+
+ <!-- Header untuk Mobile -->
+<div class="md:hidden flex justify-between items-center bg-gray-800 text-white p-4 rounded-md shadow-md mb-6">
+    <h1 class="text-2xl font-bold mb-6 flex items-center space-x-2">
+        <img src="{% static 'gambar/logo.png' %}" alt="Logo" class="w-8 h-8">
+        <span>{{ judul }}</span>
+    </h1>
+    <button @click="isSidebarOpen = !isSidebarOpen" class="focus:outline-none">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
+
+
+<!-- Welcome Section -->
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-green-900 leading-tight drop-shadow-xl">Selamat Datang, Admin!</h1>
+        <p class="text-gray-600 mt-2 text-lg">
+            Selamat Datang Di Pengelolaan Data Gapoktan Industri Pertanian Kecamatan Mlandingan.
+        </p>
+    </header>
+
+
+<div class="overflow-x-auto flex-1 p-6 transition-all duration-200 ease-in-out">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-700">Manajemen Data ERDKK</h1>
+    </header>
+
+        <!-- Tombol Tambah & Import -->
+        <div class="flex flex-wrap gap-4 mt-4 mb-4">
+            <a href="{% url 'formerdkkadmin' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                <i class="fas fa-plus"></i> Tambah Data ERDKK
+            </a>
+
+            <a href="#!" onclick="document.getElementById('fileInput').click()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                <i class="fas fa-file-import"></i> Import Excel
+            </a>
+        </div>
+
+        <!-- Form Upload Excel -->
+        <input type="file" id="fileInput" class="hidden" accept=".xlsx" onchange="uploadFile()">
+        <form id="importForm" method="post" enctype="multipart/form-data" action="{% url 'import_erdkk_excel' %}">
+            {% csrf_token %}
+            <input type="file" name="excel_file" id="realFileInput" class="hidden">
+        </form>
+
+        <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const realFileInput = document.getElementById('realFileInput');
+
+            realFileInput.files = fileInput.files;
+
+            if (realFileInput.files.length > 0) {
+                document.getElementById('importForm').submit();
+            }
+        }
+        </script>
+
+
+    <div class="overflow-x-auto bg-white shadow rounded-lg p-6 mt-4">
+        <table class="table-auto w-full border-collapse border border-gray-300 text-sm">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="px-4 py-2 border">No</th>
+                    <th class="px-4 py-2 border">Petani</th>
+                    <th class="px-4 py-2 border">Komoditas</th>
+                    <th class="px-4 py-2 border">Luas Lahan</th>
+                    <th class="px-4 py-2 border">Urea (Kg)</th>
+                    <th class="px-4 py-2 border">NPK (Kg)</th>
+                    <th class="px-4 py-2 border">Organik (Kg)</th>
+                    <th class="px-4 py-2 border">Tahun Rencana</th>
+                    <th class="px-4 py-2 border text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in erdkk_list %}
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border text-center">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2 border">{{ data.petani.nama }}</td>
+                    <td class="px-4 py-2 border">{{ data.komoditas }}</td>
+                    <td class="px-4 py-2 border">{{ data.luas_lahan }}</td>
+                    <td class="px-4 py-2 border">{{ data.pupuk_urea }}</td>
+                    <td class="px-4 py-2 border">{{ data.pupuk_npk }}</td>
+                    <td class="px-4 py-2 border">{{ data.pupuk_organik }}</td>
+                    <td class="px-4 py-2 border">{{ data.tahun_rencana }}</td>
+                    <td class="px-4 py-2 border text-center">
+                        <a href="{% url 'editerdkkadmin' data.id %}" class="text-blue-500 hover:text-blue-700 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{% url 'deleteerdkkadmin' data.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('Yakin ingin menghapus data ini?')" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center px-4 py-2 border text-gray-500 italic">Belum ada data ERDKK.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="flex justify-between items-center mt-4">
+    <div class="text-sm text-gray-600">
+        Menampilkan {{ erdkk_list.start_index }} - {{ erdkk_list.end_index }} dari total {{ erdkk_list.paginator.count }} data
+    </div>
+
+    <div class="flex space-x-2">
+        {% if erdkk_list.has_previous %}
+            <a href="?page={{ erdkk_list.previous_page_number }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-3 rounded">
+                &laquo; Sebelumnya
+            </a>
+        {% endif %}
+
+        <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded">
+            Halaman {{ erdkk_list.number }} dari {{ erdkk_list.paginator.num_pages }}
+        </span>
+
+        {% if erdkk_list.has_next %}
+            <a href="?page={{ erdkk_list.next_page_number }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-3 rounded">
+                Selanjutnya &raquo;
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- Tombol Tambah SPPT -->
+<div class="mt-10 mb-2">
+    <h2 class="text-2xl font-bold text-gray-700">Data SPPT</h2>
+    <a href="{% url 'formspptadmin' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-2 inline-block">
+        <i class="fas fa-plus"></i> Tambah Data SPPT
+    </a>
+</div>
+
+<!-- Tabel SPPT -->
+<div class="overflow-x-auto bg-white shadow rounded-lg p-6 mt-4">
+    <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200 text-left">
+                <th class="px-4 py-2 border border-gray-300">No</th>
+                <th class="px-4 py-2 border border-gray-300">Nama Petani</th>
+                <th class="px-4 py-2 border border-gray-300">Nama Ibu</th>
+                <th class="px-4 py-2 border border-gray-300">KTP</th>
+                <th class="px-4 py-2 border border-gray-300">KK</th>
+                <th class="px-4 py-2 border border-gray-300">SPPT</th>
+                <th class="px-4 py-2 border border-gray-300">Status</th>
+                <th class="px-4 py-2 border border-gray-300">Catatan</th>
+                <th class="px-4 py-2 border border-gray-300">Tanggal Pengajuan</th>
+                <th class="px-4 py-2 border border-gray-300 text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sppt in sppt_list %}
+            <tr class="hover:bg-gray-100">
+                <td class="px-4 py-2 border border-gray-300 text-center">{{ forloop.counter }}</td>
+                <td class="px-4 py-2 border border-gray-300">{{ sppt.nama_petani }}</td>
+                <td class="px-4 py-2 border border-gray-300">{{ sppt.nama_ibu }}</td>
+                <td class="px-4 py-2 border border-gray-300">
+                    {% if sppt.fotokopi_ktp %}
+                        <a href="{{ sppt.fotokopi_ktp.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat</a>
+                    {% else %}
+                        Tidak ada
+                    {% endif %}
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                    {% if sppt.fotokopi_kk %}
+                        <a href="{{ sppt.fotokopi_kk.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat</a>
+                    {% else %}
+                        Tidak ada
+                    {% endif %}
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                    {% if sppt.fotokopi_sppt %}
+                        <a href="{{ sppt.fotokopi_sppt.url }}" target="_blank" class="text-blue-600 hover:underline">Lihat</a>
+                    {% else %}
+                        Tidak ada
+                    {% endif %}
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                    {% if sppt.status == 'proses' %}
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">Diproses</span>
+                    {% elif sppt.status == 'diterima' %}
+                        <span class="bg-green-200 text-green-800 text-xs font-semibold px-2 py-1 rounded">Diterima</span>
+                    {% else %}
+                        <span class="bg-red-200 text-red-800 text-xs font-semibold px-2 py-1 rounded">Ditolak</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                    {% if sppt.status == 'ditolak' and sppt.catatan %}
+                        <span class="text-sm text-red-600 italic">{{ sppt.catatan }}</span>
+                    {% else %}
+                        <span class="text-gray-400 italic">-</span>
+                    {% endif %}
+                </td>
+                <td class="px-4 py-2 border border-gray-300">{{ sppt.tanggal_pengajuan|date:"d M Y H:i" }}</td>
+                <td class="px-4 py-2 border border-gray-300 text-center">
+                    <a href="{% url 'editspptadmin' sppt.id %}" class="text-blue-500 hover:text-blue-700 mr-2">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="{% url 'deletespptadmin' sppt.id %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Yakin ingin hapus data ini?')" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="px-4 py-2 border border-gray-300 text-center text-gray-500 italic">
+                    Belum ada data SPPT.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock content %}

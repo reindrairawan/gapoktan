@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="flex-1 p-6 bg-gradient-to-br from-green-100 via-blue-200 to-green-300 min-h-screen"
+     x-data="{ step: 1, openIndex: null }">
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <!-- Header Section -->
+  <div class="mb-12 border-b border-gray-200 pb-6">
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3 leading-tight">Aktivitas Terkini BPP</h1>
+    <p class="text-lg text-gray-600 max-w-3xl">Ikuti perkembangan terbaru dari berbagai kegiatan dan program kami</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="space-y-12">
+    {% for kegiatan in kegiatan_list %}
+      <!-- News Article Item -->
+      <article class="group">
+        <div class="flex flex-col md:flex-row gap-8">
+          {% if kegiatan.gambar %}
+            <div class="md:w-5/12 lg:w-4/12">
+              <div class="relative overflow-hidden rounded-lg aspect-video md:aspect-[4/3]">
+                <img src="{{ kegiatan.gambar.url }}" alt="{{ kegiatan.judul }}"
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            </div>
+          {% endif %}
+          
+          <div class="md:w-7/12 lg:w-8/12">
+            <div class="flex items-center gap-4 mb-3">
+              <span class="text-sm font-medium text-green-600">{{ kegiatan.tanggal|date:"d F Y" }}</span>
+              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
+              <span class="text-sm text-gray-500">Kegiatan</span>
+            </div>
+            
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-snug hover:text-green-600 transition-colors">
+              <a href="#">{{ kegiatan.judul }}</a>
+            </h2>
+            
+            <p class="text-gray-700 mb-5 text-lg leading-relaxed">{{ kegiatan.deskripsi }}</p>
+          </div>
+        </div>
+      </article>
+    {% empty %}
+      <!-- Empty State -->
+      <div class="text-center py-20">
+        <div class="mx-auto w-24 h-24 text-gray-300 mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-medium text-gray-700 mb-3">Belum ada kegiatan</h3>
+        <p class="text-gray-500 max-w-md mx-auto">Tidak ada kegiatan yang tercatat saat ini. Silakan kembali lagi nanti!</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination (Optional) -->
+  {% if kegiatan_list.has_other_pages %}
+  <div class="mt-16 flex justify-center">
+    <nav class="flex items-center gap-1">
+      {% if kegiatan_list.has_previous %}
+        <a href="?page={{ kegiatan_list.previous_page_number }}" class="px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          &laquo;
+        </a>
+      {% endif %}
+      
+      {% for i in kegiatan_list.paginator.page_range %}
+        {% if kegiatan_list.number == i %}
+          <span class="px-4 py-2 rounded-lg bg-green-600 text-white">{{ i }}</span>
+        {% else %}
+          <a href="?page={{ i }}" class="px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            {{ i }}
+          </a>
+        {% endif %}
+      {% endfor %}
+      
+      {% if kegiatan_list.has_next %}
+        <a href="?page={{ kegiatan_list.next_page_number }}" class="px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          &raquo;
+        </a>
+      {% endif %}
+    </nav>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

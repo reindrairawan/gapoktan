@@ -1,0 +1,60 @@
+{% load static %}
+
+<!-- Footer -->
+    <footer class="bg-gradient-to-r from-green-800 to-emerald-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <img src="{% static 'gambar/logobpp.png' %}" alt="Logo" class="w-18 h-16 mr-2">
+                        GAPOKTAN
+                    </h3>
+                    <p class="text-sm text-white/80">Sistem Informasi dan Monitoring Gapoktan Industri Pertanian Kecamatan Mlandingan</p>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">Navigasi</h4>
+                    <ul class="space-y-2 text-sm text-white/80">
+                        <li><a href="{% url 'beranda' %}" class="hover:text-white transition">Beranda</a></li>
+                        <li><a href="{% url 'anggota' %}" class="hover:text-white transition">Anggota</a></li>
+                        <li><a href="{% url 'lahan' %}" class="hover:text-white transition">Lahan</a></li>
+                        <li><a href="{% url 'daftar_forum' %}" class="hover:text-white transition">Forum</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">Kontak</h4>
+                    <ul class="space-y-2 text-sm text-white/80">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kecamatan Mlandingan</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+62 123 4567 890</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope"></i>
+                            <span>kantorbpp@mlandingan.id</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-md font-semibold mb-4">Sosial Media</h4>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/groups/1609746825989190?locale=id_ID" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/dispertangan_situbondo/" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@dinaspertaniandanketahanan7007" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/20 mt-8 pt-6 text-sm text-center text-white/60">
+                <p>© {% now "Y" %} Gapoktan Mlandingan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-blue-200 to-green-300 p-6">
+    <div class="max-w-4xl mx-auto">
+        <!-- Judul -->
+        <h2 class="text-4xl font-extrabold text-green-800 mb-6 text-center drop-shadow">Profil Kantor GAPOKTAN</h2>
+
+        <!-- Gambar -->
+        <div class="overflow-hidden rounded-2xl shadow-lg mb-6 transition-transform duration-300 hover:scale-[1.01]">
+            <img src="{{ profil.gambar_kantor.url }}" 
+                 alt="Foto Kantor" 
+                 class="w-full h-auto object-cover rounded-2xl">
+        </div>        
+
+        <!-- Deskripsi -->
+        <div class="p-6 rounded-2xl text-gray-800 leading-relaxed text-[15px] sm:text-sm tracking-wide">
+            <div class="prose max-w-none prose-green text-justify">
+                {{ profil.deskripsi_kantor|safe }}
+            </div>
+        </div>
+               
+    </div>
+</div>
+{% endblock content %}

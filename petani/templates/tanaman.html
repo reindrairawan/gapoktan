@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="flex-1 p-6 transition-all duration-200 ease-in-out bg-gradient-to-br from-green-50 to-blue-50">
+    <header class="mb-8 text-center">
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Selamat Datang Gapoktan Di Industri Pertanian Kecamatan Mlandingan</p>
+        <div class="w-24 h-1 bg-green-500 mx-auto mt-4 rounded-full"></div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">
+                Penyakit Tanaman
+            </h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Identifikasi dan pelajari tentang berbagai penyakit tanaman yang mungkin mempengaruhi hasil pertanian Anda
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for row in tanaman %}
+            <div class="relative bg-white rounded-xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
+                <div class="relative overflow-hidden h-64">
+                    <img src="{{ row.gambar_tanaman.url }}" 
+                         alt="{{ row.lahan }}" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                         onclick="openImageModal('{{ row.gambar_tanaman.url }}', '{{ row.lahan }}')">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                        <button onclick="openImageModal('{{ row.gambar_tanaman.url }}', '{{ row.lahan }}')" 
+                                class="px-4 py-2 bg-white text-green-600 rounded-full font-medium flex items-center ml-auto transition-all hover:bg-green-600 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-800">{{ row.lahan }}</h3>
+                        <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-semibold rounded-full">Penyakit</span>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-4">{{ row.penyakit }}</p>
+                    
+                    <div class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Klik gambar untuk detail</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+ <!-- Modal Wrapper -->
+<div id="imageModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center px-4 py-8">
+    <!-- Modal Box -->
+    <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full">
+        <!-- Header -->
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h3 id="modalTitle" class="text-lg font-semibold text-gray-800"></h3>
+            <button onclick="closeImageModal()" class="text-gray-600 hover:text-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Image -->
+        <div class="p-4 flex justify-center">
+            <img id="modalImage" src="" alt="" class="max-w-full max-h-[70vh] object-contain rounded">
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-3 border-t text-right">
+            <button onclick="closeImageModal()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+    function openImageModal(src, title) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        
+        modalImage.src = src;
+        modalTitle.textContent = title || 'Detail Gambar';
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // Center the image after load
+        modalImage.onload = function() {
+            // This ensures proper centering
+            modalImage.classList.add('mx-auto');
+        }
+    }
+
+    function closeImageModal() {
+        document.getElementById('imageModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('imageModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeImageModal();
+        }
+    });
+
+    // Close with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeImageModal();
+        }
+    });
+    </script>
+</div>
+{% endblock content %}

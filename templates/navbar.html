@@ -1,0 +1,227 @@
+{% load static %}
+<!-- Navigation -->
+ <nav class="bg-gradient-to-r from-green-800 to-emerald-900 text-white shadow-lg z-50">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'beranda' %}" class="flex items-center space-x-2 group">
+                        <img src="{% static 'gambar/logobpp.png' %}" alt="Logo Gapoktan" class="w-18 h-12 transition-transform group-hover:rotate-12">
+                        <span class="font-bold text-xl tracking-tight">GAPOKTAN<span class="text-emerald-300"> MLANDINGAN</span></span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+<div class="hidden lg:flex items-center space-x-1">
+
+    <!-- Beranda -->
+    <a href="{% url 'beranda' %}"
+       class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+       {% if request.resolver_match.url_name == 'beranda' %}
+           text-white underline-pulse 
+       {% else %}
+           text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+       {% endif %}">
+        <i class="fas fa-home text-sm"></i>
+        <span>Beranda</span>
+    </a>
+
+    <!-- Gapoktan Dropdown -->
+    <div class="relative group" x-data="{ open: false }">
+        <button @click="open = !open"
+                class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+               {% if request.resolver_match.url_name == 'grup' or request.resolver_match.url_name == 'ketua' or request.resolver_match.url_name == 'anggota' %}
+                    text-white underline-pulse
+                {% else %}
+                    text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+                {% endif %}">
+            <i class="fas fa-users text-sm"></i>
+            <span>Gapoktan</span>
+            <i class="fas fa-chevron-down text-xs transition-transform duration-200"
+               :class="{'transform rotate-180': open}"></i>
+        </button>
+        <div x-show="open" @click.away="open = false" x-transition
+             class="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+            <a href="{% url 'grup' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kelompok Tani</a>
+            <a href="{% url 'ketua' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ketua</a>
+            <a href="{% url 'anggota' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Anggota</a>
+        </div>
+    </div>
+
+    <!-- Lahan -->
+    <a href="{% url 'lahan' %}"
+       class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+       {% if request.resolver_match.url_name == 'lahan' %}
+           text-white underline-pulse
+       {% else %}
+           text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+       {% endif %}">
+        <i class="fas fa-tractor text-sm"></i>
+        <span>Lahan Pertanian</span>
+    </a>
+
+    <!-- Alsintan -->
+    <a href="{% url 'alsintan' %}"
+       class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+       {% if request.resolver_match.url_name == 'alsintan' %}
+           text-white underline-pulse
+       {% else %}
+           text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+       {% endif %}">
+        <i class="fas fa-tools text-sm"></i>
+        <span>Alsintan</span>
+    </a>
+
+    <!-- e-RDKK -->
+    <a href="{% url 'erdkk' %}"
+       class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+       {% if request.resolver_match.url_name == 'erdkk' %}
+           text-white underline-pulse
+       {% else %}
+           text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+       {% endif %}">
+        <i class="fas fa-clipboard-list text-sm"></i>
+        <span>e-RDKK</span>
+    </a>
+
+    <!-- Penyakit Tanaman -->
+    <a href="{% url 'tanaman' %}"
+       class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+       {% if request.resolver_match.url_name == 'tanaman' %}
+           text-white underline-pulse
+       {% else %}
+           text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+       {% endif %}">
+        <i class="fas fa-seedling text-sm"></i>
+        <span>Penyakit Tanaman</span>
+    </a>
+
+    <!-- Forum -->
+    <a href="{% url 'daftar_forum' %}"
+       class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+       {% if request.resolver_match.url_name == 'daftar_forum' %}
+           text-white underline-pulse
+       {% else %}
+           text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+       {% endif %}">
+        <i class="fas fa-comments text-sm"></i>
+        <span>Forum</span>
+    </a>
+
+
+      <a href="{% url 'profil' %}"
+       class="relative px-3 py-2 text-sm font-medium flex items-center space-x-1 
+       {% if request.resolver_match.url_name == 'profil' %}
+           text-white underline-pulse 
+       {% else %}
+           text-gray-300 hover:text-white hover:border-b-2 hover:border-emerald-400
+       {% endif %}">
+        <i class="fa fa-building text-sm"></i>
+        <span>Profil</span>
+    </a>
+
+</div>
+
+
+
+               <!-- User Menu -->
+                <div class="hidden md:flex items-center ml-4 relative" x-data="{ userMenuOpen: false }">
+                    {% if user.is_authenticated %}
+                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2 focus:outline-none">
+                            <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white font-medium">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="text-sm font-medium">{{ request.session.username }}</span>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': userMenuOpen}"></i>
+                        </button>
+
+                        <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kelola Akun</a>
+                            <div class="border-t border-gray-200"></div>
+                            <a href="{% url 'logoutPage' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Keluar</a>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="px-3 py-2 text-sm font-medium text-white hover:underline">Login</a>
+                    {% endif %}
+                </div>
+
+
+                <!-- Mobile menu button -->
+                <div class="lg:hidden flex items-center">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-white/20 focus:outline-none">
+                        <i :class="mobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" x-transition class="lg:hidden bg-gradient-to-b from-emerald-900 to-green-800 pb-4">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="{% url 'beranda' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                    <i class="fas fa-home w-5 text-center"></i>
+                    <span>Beranda</span>
+                </a>
+                
+                <div class="px-3 py-2">
+                    <button @click="open = !open" class="w-full flex items-center justify-between text-base font-medium text-white hover:bg-white/10 px-3 py-2 rounded-md">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-users w-5 text-center"></i>
+                            <span>Anggota</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{'transform rotate-180': open}"></i>
+                    </button>
+                    <div x-show="open" x-transition class="mt-2 pl-8 space-y-2">
+                        <a href="{% url 'grup' %}" class="block px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10">Kelompok Tani</a>
+                        <a href="{% url 'ketua' %}" class="block px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10">Ketua</a>
+                        <a href="{% url 'anggota' %}" class="block px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10">Anggota</a>
+                    </div>
+                </div>
+                
+                <a href="{% url 'lahan' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                    <i class="fas fa-tractor w-5 text-center"></i>
+                    <span>Lahan</span>
+                </a>
+                
+                <a href="{% url 'alsintan' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                    <i class="fas fa-tools w-5 text-center"></i>
+                    <span>Alsintan</span>
+                </a>
+                
+                <a href="{% url 'erdkk' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                    <i class="fas fa-clipboard-list w-5 text-center"></i>
+                    <span>e-RDKK</span>
+                </a>
+                
+                <a href="{% url 'tanaman' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                    <i class="fas fa-seedling w-5 text-center"></i>
+                    <span>Penyakit Tanaman</span>
+                </a>
+                
+                <a href="{% url 'daftar_forum' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                    <i class="fas fa-comments w-5 text-center"></i>
+                    <span>Forum</span>
+                </a>
+                
+                <div class="border-t border-white/20 pt-2 mt-2">
+                    {% if user.is_authenticated %}
+                        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                            <i class="fas fa-user-cog w-5 text-center"></i>
+                            <span>Kelola Akun</span>
+                        </a>
+                        <a href="{% url 'logoutPage' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                            <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                            <span>Keluar</span>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 flex items-center space-x-2">
+                            <i class="fas fa-sign-in-alt w-5 text-center"></i>
+                            <span>Login</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    

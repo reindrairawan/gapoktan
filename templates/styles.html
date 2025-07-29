@@ -1,0 +1,55 @@
+
+    <style>
+        @keyframes underlinePulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scaleX(0.85);
+            }
+            }
+
+            .underline-pulse::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background-color: #10b981; /* emerald-500 */
+            animation: underlinePulse 1.8s ease-in-out infinite;
+            border-radius: 9999px;
+            }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply bg-gray-50 text-gray-800 antialiased min-h-full;
+        }
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .nav-link {
+            @apply transition-all duration-200 ease-in-out;
+        }
+        .dropdown-enter {
+            @apply transition ease-out duration-200;
+        }
+        .dropdown-enter-from {
+            @apply opacity-0 -translate-y-1;
+        }
+        .dropdown-enter-to {
+            @apply opacity-100 translate-y-0;
+        }
+        .dropdown-leave {
+            @apply transition ease-in duration-150;
+        }
+        .dropdown-leave-from {
+            @apply opacity-100 translate-y-0;
+        }
+        .dropdown-leave-to {
+            @apply opacity-0 -translate-y-1;
+        }
+    </style>

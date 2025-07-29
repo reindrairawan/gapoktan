@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 text-white">
+            <h2 class="text-2xl font-bold">Buat Diskusi Baru</h2>
+            <p class="text-emerald-100">Bagikan ide atau pertanyaan Anda dengan anggota lain</p>
+        </div>
+        
+        <form method="post" class="p-6 space-y-6">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {% for field in form %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" 
+                    class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                Publikasikan Diskusi
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    input, textarea, select {
+        @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all;
+    }
+    textarea {
+        min-height: 150px;
+        @apply resize-y;
+    }
+</style>
+
+{% endblock %}

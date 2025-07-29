@@ -1,0 +1,94 @@
+{% extends "baseadmin.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Content Wrapper -->
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-red-200 to-yellow-300 p-6">
+
+    
+    <!-- Header untuk Mobile -->
+<div class="md:hidden flex justify-between items-center bg-gray-800 text-white p-4 rounded-md shadow-md mb-6">
+    <h1 class="text-2xl font-bold mb-6 flex items-center space-x-2">
+        <img src="{% static 'gambar/logo.png' %}" alt="Logo" class="w-8 h-8">
+        <span>{{ judul }}</span>
+    </h1>
+    <button @click="isSidebarOpen = !isSidebarOpen" class="focus:outline-none">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
+
+<!-- Welcome Section -->
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-green-900 leading-tight drop-shadow-xl">Selamat Datang, Admin!</h1>
+        <p class="text-gray-600 mt-2 text-lg">
+            Selamat Datang Di Pengelolaan Data Gapoktan Industri Pertanian Kecamatan Mlandingan.
+        </p>
+    </header>
+
+
+<div class="overflow-x-auto flex-1 p-6 transition-all duration-200 ease-in-out">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-700">Manajemen Data Lahan</h1>
+    </header>
+
+    <a href="{% url 'formlahanadmin' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <i class="fas fa-plus"></i> Tambah Lahan
+    </a>
+
+    <div class="overflow-x-auto bg-white shadow rounded-lg p-6 mt-4">
+        <table class="table-auto w-full border-collapse border border-gray-300 text-sm">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="px-4 py-2 border">No</th>
+                    <th class="px-4 py-2 border">Pemilik</th>
+                    <th class="px-4 py-2 border">Gambar Lahan</th>
+                    <th class="px-4 py-2 border">Luas</th>
+                    <th class="px-4 py-2 border">Jenis Tanaman</th>
+                    <th class="px-4 py-2 border">Lokasi</th>
+                    <th class="px-4 py-2 border">Latitude</th>
+                    <th class="px-4 py-2 border">Longitude</th>
+                    <th class="px-4 py-2 border">Tanggal Input</th>
+                    <th class="px-4 py-2 border text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lahan in lahan_list %}
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border text-center">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2 border">{{ lahan.pemilik.nama }}</td>
+                    <td class="px-4 py-2 border">
+                        {% if lahan.gambar_lahan %}
+                            <img src="{{ lahan.gambar_lahan.url }}" alt="Gambar" class="h-16 w-auto rounded shadow">
+                        {% else %}
+                            <span class="text-gray-400 italic">Tidak ada gambar</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 border">{{ lahan.luas }}</td>
+                    <td class="px-4 py-2 border">{{ lahan.jenis_tanaman }}</td>
+                    <td class="px-4 py-2 border">{{ lahan.lokasi|safe }}</td>
+                    <td class="px-4 py-2 border">{{ lahan.latitude }}</td>
+                    <td class="px-4 py-2 border">{{ lahan.longitude }}</td>
+                    <td class="px-4 py-2 border">{{ lahan.created_at }}</td>
+                    <td class="px-4 py-2 border text-center">
+                        <a href="{% url 'editlahanadmin' lahan.id %}" class="text-blue-500 hover:text-blue-700 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{% url 'deletelahanadmin' lahan.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('Yakin ingin menghapus data lahan ini?')" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center px-4 py-2 border text-gray-500 italic">Belum ada data lahan.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

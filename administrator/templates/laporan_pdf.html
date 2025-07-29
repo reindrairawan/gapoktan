@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan PDF</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 12px;
+            margin: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #444;
+        }
+        th, td {
+            padding: 5px;
+            text-align: center;
+        }
+        h1, h2 {
+            text-align: center;
+            margin: 20px 0 10px;
+        }
+        .logo {
+            width: 100px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="{{ logo_url }}" class="logo">
+        <div style="text-align:right;">
+            <p>Tanggal Unduh: {{ tanggal_unduh }}</p>
+        </div>
+    </div>
+
+    <h1>Laporan Statistik Gapoktan</h1>
+
+    <h2>Total Petani per Bulan</h2>
+    <table>
+        <tr>
+            {% for bulan in bulan_list %}
+                <th>{{ bulan }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for p in petani_per_bulan %}
+                <td>{{ p }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+
+    <h2>Total Lahan per Bulan</h2>
+    <table>
+        <tr>
+            {% for bulan in bulan_list %}
+                <th>{{ bulan }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for l in lahan_per_bulan %}
+                <td>{{ l }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+
+    <h2>Kebutuhan Pupuk</h2>
+    <table>
+        <tr>
+            <th>Jenis Pupuk</th>
+            <th>Jumlah</th>
+        </tr>
+        <tr>
+            <td>Urea</td>
+            <td>{{ urea }} kg</td>
+        </tr>
+        <tr>
+            <td>NPK</td>
+            <td>{{ npk }} kg</td>
+        </tr>
+        <tr>
+            <td>Organik</td>
+            <td>{{ organik }} liter</td>
+        </tr>
+    </table>
+
+    <h2>Status Alat Mesin Pertanian</h2>
+<table>
+    <tr>
+        <th>Kondisi</th>
+        <th>Jumlah</th>
+    </tr>
+    <tr>
+        <td>Tersedia</td>
+        <td>{{ alat_tersedia }}</td>
+    </tr>
+    <tr>
+        <td>Dipinjam</td>
+        <td>{{ alat_dipinjam }}</td>
+    </tr>
+    <tr>
+        <td>Rusak</td>
+        <td>{{ alat_rusak }}</td>
+    </tr>
+</table>
+
+
+</body>
+</html>

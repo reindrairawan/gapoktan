@@ -1,0 +1,86 @@
+{% extends "baseadmin.html" %}
+{% load static %}
+{% block content %}
+
+
+<!-- Content Wrapper -->
+<div class="min-h-screen bg-gradient-to-br from-green-100 via-red-200 to-yellow-300 p-6">
+
+    
+<!-- Header untuk Mobile -->
+<div class="md:hidden flex justify-between items-center bg-gray-800 text-white p-4 rounded-md shadow-md mb-6">
+    <h1 class="text-2xl font-bold mb-6 flex items-center space-x-2">
+        <img src="{% static 'gambar/logobpp.png' %}" alt="Logo" class="w-8 h-8">
+        <span>{{ judul }}</span>
+    </h1>
+    <button @click="isSidebarOpen = !isSidebarOpen" class="focus:outline-none">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
+
+<!-- Welcome Section -->
+    <header class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-green-900 leading-tight drop-shadow-xl">Selamat Datang, Admin!</h1>
+        <p class="text-gray-600 mt-2 text-lg">
+            Selamat Datang Di Pengelolaan Data Gapoktan Industri Pertanian Kecamatan Mlandingan.
+        </p>
+    </header>
+    
+<div class="overflow-x-auto flex-1 p-6 transition-all duration-200 ease-in-out">
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-700">Manajemen Data Penyakit Tanaman</h1>
+    </header>
+
+    <!-- Tombol tambah data -->
+    <a href="{% url 'formpenyakittanamanadmin' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <i class="fas fa-plus"></i> Tambah Data
+    </a>
+
+    <!-- Tabel data -->
+    <div class="overflow-x-auto bg-white shadow rounded-lg p-6 mt-4">
+        <table class="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200 text-left">
+                    <th class="px-4 py-2 border border-gray-300">No</th>
+                    <th class="px-4 py-2 border border-gray-300">Lahan</th>
+                    <th class="px-4 py-2 border border-gray-300">Penyakit</th>
+                    <th class="px-4 py-2 border border-gray-300">Gambar Tanaman</th>
+                    <th class="px-4 py-2 border border-gray-300 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tanaman in penyakit_list %}
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border border-gray-300 text-center">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ tanaman.lahan }}</td>
+                    <td class="px-4 py-2 border border-gray-300">{{ tanaman.penyakit }}</td>
+                    <td class="px-4 py-2 border border-gray-300">
+                        {% if tanaman.gambar_tanaman %}
+                            <img src="{{ tanaman.gambar_tanaman.url }}" class="h-20 rounded" alt="Gambar Tanaman">
+                        {% else %}
+                            <span class="text-gray-400 italic">Tidak ada</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 border border-gray-300 text-center">
+                        <a href="{% url 'editpenyakittanamanadmin' tanaman.id %}" class="text-blue-500 hover:text-blue-700 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <form action="{% url 'deletepenyakittanamanadmin' tanaman.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" onclick="return confirm('Yakin ingin menghapus data ini?')" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center px-4 py-2 border text-gray-500 italic">Belum ada data penyakit tanaman.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
