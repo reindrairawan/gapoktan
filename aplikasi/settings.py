@@ -40,6 +40,11 @@ DEBUG = True
 # Atau gunakan wildcard (untuk sementara):
 ALLOWED_HOSTS = ['*']  # Hanya untuk development, tidak aman untuk produksi!
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://gapoktan-production.up.railway.app',
+    'https://*.up.railway.app'  # Untuk semua subdomain Railway
+]
+
 # Application definition
 
 INSTALLED_APPS = [
