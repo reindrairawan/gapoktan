@@ -120,6 +120,16 @@ if 'DATABASE_URL' in os.environ:
         },
     }
 
+# Ambil SECRET_KEY dari environment variable
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+# Validasi untuk produksi
+if not SECRET_KEY and os.environ.get('RAILWAY_ENVIRONMENT'):
+    raise ValueError("SECRET_KEY environment variable must be set in production!")
+
+# Atau fallback untuk development
+SECRET_KEY = SECRET_KEY or 'development-key-sementara'
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
