@@ -31,8 +31,14 @@ SECRET_KEY = 'django-insecure-orc@na^^9-ln!bqy7mh#ecjj-#zquoa6!a4sh9bb!6xj(__&%g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'gapoktan-production.up.railway.app',
+    'localhost',
+    '127.0.0.1'
+]
 
+# Atau gunakan wildcard (untuk sementara):
+# ALLOWED_HOSTS = ['*']  # Hanya untuk development, tidak aman untuk produksi!
 
 # Application definition
 
