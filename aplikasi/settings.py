@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import base64
+import json
+from tempfile import NamedTemporaryFile
 from pathlib import Path
 import os
 from urllib.parse import urlparse
@@ -120,6 +123,17 @@ if 'DATABASE_URL' in os.environ:
         },
     }
 
+if 'FIREBASE_KEY_BASE64' in os.environ:
+    try:
+        # Simpan sebagai file sementara
+        key_content = base64.b64decode(os.environ['FIREBASE_KEY_BASE64'])
+        with NamedTemporaryFile(mode='wb', suffix='.json', delete=False) as temp:
+            temp.write(key_content)
+            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = temp.name
+    except Exception as e:
+        print(f"Error loading Firebase credentials: {e}")
+        
+        
 # Ambil SECRET_KEY dari environment variable
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
