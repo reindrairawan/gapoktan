@@ -15,8 +15,7 @@ import os
 from firebase_admin import credentials
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# cred_path = os.path.join(BASE_DIR, 'aplikasi', 'serviceAccountKey.json')
-# cred = credentials.Certificate(cred_path)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
