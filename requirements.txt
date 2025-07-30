@@ -72,3 +72,5 @@ xhtml2pdf==0.2.17
 # psycopg2-binary==2.9.6  # Untuk PostgreSQL
 gunicorn==23.0.0
 psycopg2-binary==2.9.10
+python-dotenv==1.1.1
+whitenoise==6.9.0

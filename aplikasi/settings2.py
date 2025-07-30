@@ -10,8 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import base64
+import json
+from tempfile import NamedTemporaryFile
 from pathlib import Path
 import os
+from urllib.parse import urlparse
 from firebase_admin import credentials
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,8 +35,19 @@ SECRET_KEY = 'django-insecure-orc@na^^9-ln!bqy7mh#ecjj-#zquoa6!a4sh9bb!6xj(__&%g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = [
+#     'gapoktan-production.up.railway.app',
+#     'localhost',
+#     '127.0.0.1'
+# ]
 
+# Atau gunakan wildcard (untuk sementara):
+ALLOWED_HOSTS = ['*']  # Hanya untuk development, tidak aman untuk produksi!
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://gapoktan-production.up.railway.app',
+    'https://*.up.railway.app'  # Untuk semua subdomain Railway
+]
 
 # Application definition
 
@@ -83,13 +98,51 @@ WSGI_APPLICATION = 'aplikasi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Konfigurasi default untuk development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+#secret key = t6hs@r!iti5v57a$6hu#ow9*gh&-kr=b-jvj17^z1vo!6g7@66
 
+# Konfigurasi untuk Railway
+if 'DATABASE_URL' in os.environ:
+    db_info = urlparse(os.environ['DATABASE_URL'])
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': db_info.path[1:],  # Menghilangkan slash depan
+        'USER': db_info.username,
+        'PASSWORD': db_info.password,
+        'HOST': db_info.hostname,
+        'PORT': db_info.port,
+        'OPTIONS': {
+            'sslmode': 'require',  # Wajib untuk koneksi eksternal
+            'sslrootcert': 'prod-ca-2021.crt',  # Untuk beberapa provider
+        },
+    }
+
+if 'FIREBASE_KEY_BASE64' in os.environ:
+    try:
+        # Simpan sebagai file sementara
+        key_content = base64.b64decode(os.environ['FIREBASE_KEY_BASE64'])
+        with NamedTemporaryFile(mode='wb', suffix='.json', delete=False) as temp:
+            temp.write(key_content)
+            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = temp.name
+    except Exception as e:
+        print(f"Error loading Firebase credentials: {e}")
+        
+        
+# Ambil SECRET_KEY dari environment variable
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+# Validasi untuk produksi
+if not SECRET_KEY and os.environ.get('RAILWAY_ENVIRONMENT'):
+    raise ValueError("SECRET_KEY environment variable must be set in production!")
+
+# Atau fallback untuk development
+SECRET_KEY = SECRET_KEY or 'development-key-sementara'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
