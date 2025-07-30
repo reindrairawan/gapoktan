@@ -1,4 +1,6 @@
 import os
+
+import firebase_admin
 from.settings import *
 from .settings import BASE_DIR
 import base64
@@ -28,6 +30,9 @@ if service_account_b64:
         f.write(service_account_json)
 else:
     raise ValueError("Environment variable SERVICE_ACCOUNT_JSON tidak ditemukan!")
+
+cred = credentials.Certificate(json.loads(service_account_json))
+firebase_admin.initialize_app(cred)
 
 # WhiteNoise configuration
 MIDDLEWARE = [
