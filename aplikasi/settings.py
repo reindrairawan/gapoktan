@@ -138,3 +138,5 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# cred_path = os.path.join(BASE_DIR, 'aplikasi', 'serviceAccountKey.json')
+# cred = credentials.Certificate(cred_path)
