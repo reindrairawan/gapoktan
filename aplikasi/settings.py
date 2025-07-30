@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-from firebase_admin import credentials
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -138,5 +138,3 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# cred_path = os.path.join(BASE_DIR, 'aplikasi', 'serviceAccountKey.json')
-# cred = credentials.Certificate(cred_path)
