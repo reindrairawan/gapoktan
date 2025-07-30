@@ -13,26 +13,22 @@ CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 DEBUG = False
 
 
-
-# Ambil dari environment variable
+# Handle Firebase Credentials
 service_account_b64 = os.getenv("SERVICE_ACCOUNT_JSON")
-
-if service_account_b64:
-    # Decode base64 dan buat file JSON
-    service_account_json = base64.b64decode(service_account_b64).decode("utf-8")
-    service_account_path = "aplikasi/serviceAccountKey.json"
-    
-    # Pastikan folder ada
-    os.makedirs(os.path.dirname(service_account_path), exist_ok=True)
-    
-    # Simpan ke file
-    with open(service_account_path, "w") as f:
-        f.write(service_account_json)
-else:
+if not service_account_b64:
     raise ValueError("Environment variable SERVICE_ACCOUNT_JSON tidak ditemukan!")
 
-cred = credentials.Certificate(json.loads(service_account_json))
-firebase_admin.initialize_app(cred)
+# Decode dan parse JSON
+try:
+    service_account_json = base64.b64decode(service_account_b64).decode("utf-8")
+    service_account_data = json.loads(service_account_json)
+    
+    # Inisialisasi Firebase langsung dari JSON tanpa membuat file
+    cred = credentials.Certificate(service_account_data)
+    firebase_admin.initialize_app(cred)
+except Exception as e:
+    raise ValueError(f"Gagal memproses Firebase credentials: {str(e)}")
+
 
 # WhiteNoise configuration
 MIDDLEWARE = [
