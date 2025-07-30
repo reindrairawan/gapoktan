@@ -5,6 +5,7 @@ from.settings import *
 from .settings import BASE_DIR
 import base64
 import json
+from firebase_admin import credentials
 
 
 SECRET_KEY = os.environ['SECRET']
