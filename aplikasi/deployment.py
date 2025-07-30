@@ -1,12 +1,33 @@
 import os
 from.settings import *
 from .settings import BASE_DIR
+import base64
+import json
 
 
 SECRET_KEY = os.environ['SECRET']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 DEBUG = False
+
+
+
+# Ambil dari environment variable
+service_account_b64 = os.getenv("SERVICE_ACCOUNT_JSON")
+
+if service_account_b64:
+    # Decode base64 dan buat file JSON
+    service_account_json = base64.b64decode(service_account_b64).decode("utf-8")
+    service_account_path = "aplikasi/serviceAccountKey.json"
+    
+    # Pastikan folder ada
+    os.makedirs(os.path.dirname(service_account_path), exist_ok=True)
+    
+    # Simpan ke file
+    with open(service_account_path, "w") as f:
+        f.write(service_account_json)
+else:
+    raise ValueError("Environment variable SERVICE_ACCOUNT_JSON tidak ditemukan!")
 
 # WhiteNoise configuration
 MIDDLEWARE = [
