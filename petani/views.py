@@ -21,13 +21,44 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth as firebase_auth
 import os
 
-# Initialize Firebase app and Firestore client if not already initialized
-if not firebase_admin._apps:
-    cred_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'aplikasi', 'serviceAccountKey.json')
-    cred = credentials.Certificate(cred_path)
-    firebase_admin.initialize_app(cred)
-db = firestore.client()
+# # Initialize Firebase app and Firestore client if not already initialized
+# if not firebase_admin._apps:
+#     cred_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'aplikasi', 'serviceAccountKey.json')
+#     cred = credentials.Certificate(cred_path)
+#     firebase_admin.initialize_app(cred)
+# db = firestore.client()
 
+def initialize_firebase():
+    if not firebase_admin._apps:
+        try:
+            # Konfigurasi dari environment variables
+            firebase_config = {
+                "type": os.environ.get("FIREBASE_TYPE"),
+                "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
+                "private_key_id": os.environ.get("FIREBASE_PRIVATE_KEY_ID"),
+                "private_key": os.environ.get("FIREBASE_PRIVATE_KEY").replace('\\n', '\n'),
+                "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
+                "client_id": os.environ.get("FIREBASE_CLIENT_ID"),
+                "auth_uri": os.environ.get("FIREBASE_AUTH_URI"),
+                "token_uri": os.environ.get("FIREBASE_TOKEN_URI"),
+                "auth_provider_x509_cert_url": os.environ.get("FIREBASE_AUTH_PROVIDER_CERT_URL"),
+                "client_x509_cert_url": os.environ.get("FIREBASE_CLIENT_CERT_URL")
+            }
+            
+            cred = credentials.Certificate(firebase_config)
+            firebase_admin.initialize_app(cred)
+            return firestore.client()
+        except Exception as e:
+            raise RuntimeError(f"Gagal inisialisasi Firebase: {str(e)}")
+
+# Inisialisasi Firestore client
+try:
+    db = initialize_firebase()
+except Exception as e:
+    # Handle error sesuai kebutuhan aplikasi
+    print(f"Error Firebase: {e}")
+    db = None  # Atau fallback ke sistem lain
+    
 def login_view(request):
     if request.method == 'POST':
         nik = request.POST.get('nik')
