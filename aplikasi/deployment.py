@@ -45,11 +45,6 @@ MIDDLEWARE = [
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Pastikan path ini benar
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
 
 
 conn_str = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
@@ -63,3 +58,6 @@ DATABASES = {
         'PASSWORD': conn_str_params['password'],
     }
 }
+
+print(f"BASE_DIR: {BASE_DIR}")
+print(f"STATIC_ROOT: {os.path.join(BASE_DIR, 'staticfiles')}")
